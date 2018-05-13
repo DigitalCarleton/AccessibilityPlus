@@ -2,30 +2,27 @@
 
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
-    protected $_hooks = array(
-        '',''
-    );
-
     protected $_filters = array(
-        '',''
+        'file_markup'
     );
-    public function install() {
-        $this->_installOptions();
-    }
 
-    public function uninstall() {
-        $this->_uninstallOptions();
-    }
-
-    public function hookInstall()
+    public function filterFileMarkup($html, $args)
     {
-        $db = $this->_db;
-        $sql = "";
-        $db->query($sql);
-    }
+      //$this_id = $file->getProperty($item_id);
+      $file = $args['file'];
+      $callback = $args['callback'];// = 'derivativeImage';
+      $options = $args['options'];
+      //html is a String - gettype($html) == 'string'
+      //line break: echo nl2br ("\n");
 
-    public function hookUninstall($args)
-    {
-    }
+      if($file->hasThumbnail() || $file->hasFullsize()){
+        $posStart = strpos($html, 'alt');
+        $posStop = strpos($html, 'title');
+        $length = $posStart - $posStop;
+        $newAlt = 'alt="new-alt-text"';
 
+        $html = substr_replace($html, $newAlt, $posStart, $length);
+      }
+      return $html;
+    }
 }
