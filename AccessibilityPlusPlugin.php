@@ -10,18 +10,18 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     {
       //$this_id = $file->getProperty($item_id);
       $file = $args['file'];
-      $callback = $args['callback'];// = 'derivativeImage';
+      $callback = $args['callback']; // = 'derivativeImage';
       $options = $args['options'];
-      //html is a String - gettype($html) == 'string'
-      //line break: echo nl2br ("\n");
 
+      //Checks if the file has a thumbnail or fullsize image
       if($file->hasThumbnail() || $file->hasFullsize()){
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
         $length = $posStart - $posStop;
-        $newAlt = 'alt="new-alt-text"';
-
-        $html = substr_replace($html, $newAlt, $posStart, $length);
+        $newAlt = "new-alt-text";
+        $newCode = 'alt="'.$newAlt.'"';
+        //replaces code generating the alt-text in the HTML with $newCode
+        $html = substr_replace($html, $newCode, $posStart, $length);
       }
       return $html;
     }
