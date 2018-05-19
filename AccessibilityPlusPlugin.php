@@ -2,6 +2,10 @@
 
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
+    protected $_hooks = array(
+        'define_acl'
+    );
+
     protected $_filters = array(
         'file_markup',
         'admin_navigation_main'
@@ -14,6 +18,13 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
             'uri' => url('accessibility-plus')
         );
         return $navArray;
+    }
+
+    public function hookDefineAcl($args)
+    {
+        $acl = $args['acl'];
+        $acl->addResource('AccessibilityPlus');
+        $acl->allow(null, 'AccessibilityPlus');
     }
 
     public function filterFileMarkup($html, $args)
@@ -29,7 +40,8 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
         $length = $posStart - $posStop;
-        $newAlt = "new-alt-text";
+        $metadata = $file-getProperty($metadata);
+        $newAlt = "new-alt-text"; //$metadata[get_option('alt_text_data')] 
         $newCode = 'alt="'.$newAlt.'"';
         //replaces code generating the alt-text in the HTML with $newCode
         $html = substr_replace($html, $newCode, $posStart, $length);
