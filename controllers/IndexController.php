@@ -16,6 +16,6 @@ class AccessibilityPlus_IndexController extends Omeka_Controller_AbstractActionC
               //}
             }
           }
-        return $this->redirect('accessibility-plus');
+        return;
     }
 }
