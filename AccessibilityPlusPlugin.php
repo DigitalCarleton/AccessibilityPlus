@@ -3,8 +3,18 @@
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_filters = array(
-        'file_markup'
+        'file_markup',
+        'admin_navigation_main'
     );
+
+    public function filterAdminNavigationMain($navArray)
+    {
+        $navArray['AccessibilityPlus'] = array(
+            'label' => __("AccessibilityPlus"),
+            'uri' => url('accessibility-plus')
+        );
+        return $navArray;
+    }
 
     public function filterFileMarkup($html, $args)
     {
@@ -14,6 +24,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       $options = $args['options'];
 
       //Checks if the file has a thumbnail or fullsize image
+      //$file = $fileOptions['imgAttributes']['alt']
       if($file->hasThumbnail() || $file->hasFullsize()){
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
