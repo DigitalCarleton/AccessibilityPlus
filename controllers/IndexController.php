@@ -10,12 +10,10 @@ class AccessibilityPlus_IndexController extends Omeka_Controller_AbstractActionC
       if ($request->isPost()) {
           if ($form->isValid($_POST)) {
               $options = $form->getValues();
-              // Everything except the CSRF hash should correspond to a
-              // valid option in the database.
-              unset($options['alt_text_data']);
-              foreach ($options as $key => $value) {
-                  set_option($key, $value);
-              }
+              //unset($options['alt_text_data']);
+              //foreach ($options as $key => $value) {
+              //    set_option($key, $value);
+              //}
             }
           }
         return $this->redirect('accessibility-plus');
