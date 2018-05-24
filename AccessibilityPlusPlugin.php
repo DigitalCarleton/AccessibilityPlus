@@ -40,8 +40,12 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
         $length = $posStart - $posStop;
-        $metadata = $file-getProperty($metadata);
-        $newAlt = "new-alt-text"; //$metadata[get_option('alt_text_data')] 
+        $metadata = $file->getProperty('metadata');
+        foreach($metadata as $key => $value){
+          echo $key;
+          echo $value;
+        }
+        $newAlt = $metadata[get_option('alt_text_data')]
         $newCode = 'alt="'.$newAlt.'"';
         //replaces code generating the alt-text in the HTML with $newCode
         $html = substr_replace($html, $newCode, $posStart, $length);
