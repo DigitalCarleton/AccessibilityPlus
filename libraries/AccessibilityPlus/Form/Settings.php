@@ -5,85 +5,51 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
     public function init()
     {
         parent::init();
+        //makes a call to the database to get all the dublin core elements
+        $db = get_db();
+        $valueOptions = array();
+        $table = $db->getTable('Element');
+        $elements = $table->fetchObjects('SELECT * FROM omeka_elements WHERE element_set_id = 1');
+        foreach ($elements as $element){
+          $element_title = $element->getProperty('name');
+          $valueOptions["$element_title"] = "$element_title";
+        }
 
-    $valueOptions = array(
-        'Title'=>'Title',
-        'Alternative Title'=>'Alternative Title',
-        'Subject'=>'Subject',
-        'Description'=>'Description',
-        'Abstract'=>'Abstract',
-        'Table Of Contents'=>'Table Of Contents',
-        'Creator'=>'Creator',
-        'Source'=>'Source',
-        'Publisher'=>'Publisher',
-        'Date'=>'Date',
-        'Date Available'=>'Date Available',
-        'Date Created'=>'Date Created',
-        'Date Accepted'=>'Date Accepted',
-        'Date Copyrighted'=>'Date Copyrighted',
-        'Date Submitted'=>'Date Submitted',
-        'Date Issued'=>'Date Issued',
-        'Date Modified'=>'Date Modified',
-        'Date Valid'=>'Date Valid',
-        'Contributor'=>'Contributor',
-        'Rights'=>'Rights',
-        'Access Rights'=>'Access Rights',
-        'License'=>'License',
-        'Relation'=>'Relation',
-        'Conforms To'=>'Conforms To',
-        'Has Format'=>'Has Format',
-        'Has Part'=>'Has Part',
-        'Has Version'=>'Has Version',
-        'Is Format Of'=>'Is Format Of',
-        'Is Part Of'=>'Is Part Of',
-        'Is Referenced By'=>'Is Referenced By',
-        'Is Replaced By'=>'Is Replaced By',
-        'Is Required By'=>'Is Required By',
-        'Is Version Of'=>'Is Version Of',
-        'References'=>'References',
-        'Replaces'=>'Replaces',
-        'Requires'=>'Requires',
-        'Format'=>'Format',
-        'Extent'=>'Extent',
-        'Medium'=>'Medium',
-        'Language'=>'Language',
-        'Type'=>'Type',
-        'Identifier'=>'Identifier',
-        'Bibliographic Citation'=>'Bibliographic Citation',
-        'Coverage'=>'Coverage',
-        'Spatial Coverage'=>'Spatial Coverage',
-        'Temporal Coverage'=>'Temporal Coverage',
-        'Accrual Method'=>'Accrual Method',
-        'Accrual Periodicity'=>'Accrual Periodicity',
-        'Accrual Policy'=>'Accrual Policy',
-        'Audience'=>'Audience',
-        'Audience Education Level'=>'Audience Education Level',
-        'Mediator'=>'Mediator',
-        'Instructional Method'=>'Instructional Method',
-        'Provenance'=>'Provenance',
-        'Rights Holder'=>'Rights Holder',
-    );
+        //puts the currently chosen element in the first slot of the dropdownmenu
+        $front = get_option('alt_text_data');
+        if($front){
+            $valueOptions = array($front => $valueOptions[$front]) + $valueOptions;
+        }
 
-    $front = get_option('alt_text_data');
-    if($front){
-        $valueOptions = array($front => $valueOptions[$front]) + $valueOptions;
-    }
+        //builds the dropdownmenu
+        $this->addElement(
+            'select',
+            'DublinCore',
+            array(
+                'label' => 'Dublin Core Metadata Types',
+                'multiOptions' => $valueOptions,
+              )
+        );
 
-    $this->addElement(
-        'select',
-        'DublinCore',
-        array(
-            'label' => 'Dublin Core Metadata Types',
-            'multiOptions' => $valueOptions,
-        )
-      );
-
-    $this->addElement('submit', 'submit', array(
-            'label' => __('Upload'),
-            'class' => 'submit submit-medium',
-            'decorators' => (array(
-                'ViewHelper',
-                array('HtmlTag', array('tag' => 'div', 'class' => 'field')))),
+        //builds the submit button
+        $this->addElement('submit', 'submit', array(
+                'label' => __('Save Settings'),
+                'class' => 'submit submit-medium',
+                'decorators' => (array(
+                    'ViewHelper',
+                    array('HtmlTag', array('tag' => 'div', 'class' => 'field')))),
         ));
+
+        //makes display separate groups for visual formatting
+        $this->addDisplayGroup(
+            array('DublinCore'),
+            'Dropdownmenu'
+        );
+
+        $this->addDisplayGroup(
+            array('submit'),
+            'Save Settings Button'
+        );
+
     }
 }
