@@ -1,3 +1,6 @@
+Also be working on full docs in github repo (readme, etc), written at a mid-level guiding way (less in the weeds than omeka documentation - write to you, 6 months ago)
+https://www.deque.com/blog/great-alt-text-introduction/
+
 # This Document
 
 Information about this starter plugin documentation and the plugin itself
@@ -20,6 +23,7 @@ See [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/la
 See [OmekaDoc's Tutorial on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for more information.
 
 See [OmekaDoc's Tutorial on Best Practices For Plugin Development ](http://omeka.readthedocs.io/en/latest/Tutorials/bestPracticesPlugins.html) for more information.
+See 1.x tutorial: https://web.archive.org/web/20171004172739/http://omeka.org/codex/Plugin_Writing_Best_Practices
 
 ### Models, Views, and Controllers
 
