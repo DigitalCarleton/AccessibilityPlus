@@ -41,9 +41,14 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $length = $posStop - $posStart;
         //gets the item image and gets the requested metadata from it
         $item = $file->getItem();
+
+        $newAlt = NULL;
         $selected_option = get_option('alt_text_data');
-        $newAlt = metadata($item, array('Dublin Core', $selected_option));
-        //if the requested metadata is missing, use the image title instead
+        //checks if the option has been set in the options table or not
+        if ($selected_option){
+            $newAlt = metadata($item, array('Dublin Core', $selected_option));
+        }
+        //if no option set or if the requested metadata is missing, use the image title instead
         if (!$newAlt){
             $newAlt = metadata($item, array('Dublin Core', 'Title'));
             //if the image is untitled, allow the $html to use the filename
