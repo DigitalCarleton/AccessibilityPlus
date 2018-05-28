@@ -11,6 +11,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         'admin_navigation_main'
     );
 
+    //Adds AccessibilityPlus as part of the admin navigation sidebar menu
     public function filterAdminNavigationMain($navArray)
     {
         $navArray['AccessibilityPlus'] = array(
@@ -20,6 +21,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         return $navArray;
     }
 
+    //adds 'AccessibilityPlus' to the Access Control List
     public function hookDefineAcl($args)
     {
         $acl = $args['acl'];
@@ -27,24 +29,27 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->allow(null, 'AccessibilityPlus');
     }
 
+    //hooks into the File Markup filter
     public function filterFileMarkup($html, $args)
     {
-      //$this_id = $file->getProperty($item_id);
-      $file = $args['file'];
-      $callback = $args['callback']; // = 'derivativeImage';
-      $options = $args['options'];
-
       //Checks if the file has a thumbnail or fullsize image
-      //$file = $fileOptions['imgAttributes']['alt']
+      $file = $args['file'];
       if($file->hasThumbnail() || $file->hasFullsize()){
+        //finds the position where alt-text is defined in the HTML
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
-        $length = $posStart - $posStop;
+        $length = $posStop - $posStart;
+        //gets the item image and gets the requested metadata from it
         $item = $file->getItem();
         $selected_option = get_option('alt_text_data');
         $newAlt = metadata($item, array('Dublin Core', $selected_option));
+        //if the requested metadata is missing, use the image title instead
         if (!$newAlt){
             $newAlt = metadata($item, array('Dublin Core', 'Title'));
+            //if the image is untitled, allow the $html to use the filename
+            if ("$newAlt" == '[Untitled]'){
+                return $html;
+            }
         }
         $newCode = 'alt="'.$newAlt.'"';
         //replaces code generating the alt-text in the HTML with $newCode

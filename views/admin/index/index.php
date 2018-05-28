@@ -6,7 +6,7 @@ echo head(array(
 ?>
 
 <div class="carleton-img">
-    <img src="<?php echo img('carleton-dh-logo.png'); ?>" />
+    <img src="<?php echo img('carleton-dh-logo.png'); ?>" alt="Carleton College Digital Humanities Logo"/>
 </div>
 
 <h4><?php echo __('Alternative Text Options'); ?></h4>
