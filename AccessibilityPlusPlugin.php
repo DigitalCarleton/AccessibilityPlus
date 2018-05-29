@@ -3,7 +3,8 @@
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_hooks = array(
-        'define_acl'
+        'define_acl',
+        'install'
     );
 
     protected $_filters = array(
@@ -28,6 +29,12 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->addResource('AccessibilityPlus');
         $acl->allow(null, 'AccessibilityPlus');
     }
+
+    //sets the default chosen metadata to the alt_text_data as 'title'
+    /*public function hookInstall()
+    {
+        set_option('alt_text_data', 'title');
+    }*/
 
     //hooks into the File Markup filter
     public function filterFileMarkup($html, $args)

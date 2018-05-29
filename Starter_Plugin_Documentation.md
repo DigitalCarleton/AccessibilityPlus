@@ -1,7 +1,7 @@
+# About This Starter Plugin Documentation
+
 Also be working on full docs in github repo (readme, etc), written at a mid-level guiding way (less in the weeds than omeka documentation - write to you, 6 months ago)
 https://www.deque.com/blog/great-alt-text-introduction/
-
-# This Document
 
 Information about this starter plugin documentation and the plugin itself
 
@@ -21,47 +21,77 @@ Plugin development is primarily concerned with back-end web development.
 
 ## LAMP Stacks
 
-A LAMP stack is a type of solution stack. A solution stack (or "software stack") is a set of software components that work together to create a complete platform. They work so well that no additional software is needed to support them [Wikipedia](https://en.wikipedia.org/wiki/Solution_stack). As LAMP is a web application solution stack, the software components are:
+A LAMP stack is a type of solution stack. A solution stack (or "software stack") is a complete set of software components that work together to address a given problem by providing a needed  platform or infrastructure. Its two subtypes are a "server stack" and a "web stack." [Wikipedia](https://en.wikipedia.org/wiki/Solution_stack). As LAMP is a web stack, the software components are:
 1. the target operating system
 2. the web server
 3. the database
 4. the programming language.
-These four parts are responsible for the acronym "LAMP" and act as a platform to build dynamic web sites and run web applications. While they are interchangeable with equivalent software, here is some brief information on the original ones.
+These four parts are responsible for the acronym "LAMP" and act as a platform to serve dynamic content across the web. While they are interchangeable with equivalent software, here is some brief information on the original ones.
 
 ### 1. Linux - The Target Operating System
-Linux is a Unix-like computer operating system and thus its basic design is assembled from principles established in Unix. It was created under as free and open source software by Linus Benedict Torvalds.
-"An operating system (OS) is system software that manages computer hardware and software resources and provides common services for computer programs." - Wikipedia
+Linux is a Unix-like computer operating system and thus its basic design is assembled from principles established in Unix. It was created under as free and open source software by Linus Benedict Torvalds. As an operating system, Linux serves as the base layer of the LAMP stack, supporting the basic functions of the server.
 
 ### 2. Apache - The Web Server
-Information on what Web Servers are
+The role of LAMP's web server has been traditionally supplied by Apache, an open source-software, which runs the background process that maintain the server.
 
 ### 3. MySQL - The Database
-Information on what databases are
+MySQL is a "multithreaded, multi-user, SQL database management system" ([Wikipedia](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29#MySQL_and_alternatives)) and stores all the information served by Apache.
 
 ### 4. PHP - The Programming Language
-Information on what programming languages are
+PHP is a server-side scripting language designed for web development. It can be embedded directly in the HTML of a website and outputs HTML code, allowing the PHP itself to be invisible to the user of the webpage. It lets the user interact with the web content by fetching and displaying information from the database.
 
 # Zend Framework
-A brief description (with links) of the fact that Omeka is built on it.
+Zend Framework is a collection of PHP packages that can be used to develop web applications using object-oriented code. [Omeka is built on Zend Framework 2](http://omeka.readthedocs.io/en/latest/whatsnew/2.0.html) and consequently, the code uses a Models Views and Controllers or "MVC" framework and one must interact it using hooks and filters. Both of these concepts will be explained. [Learn more about Zend Framework](https://framework.zend.com/about).
+
 The MVC framework info would go there along with hooks and filters as a basic means of extending a framework.
 MVC, hooks, and filters work with the Zend Framework
 
 ## Hooks
-See [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html) for more information.
-Hooks and filters are a basic way to extend an existing platform or framework with plugins and themes. You might want to find and read something on Wordpress hooks and plugins to be able to abstract out the general concepts from what is unique to each CMS.
+Hooks and filters are a basic way to extend an existing platform or framework with plugins and themes.
+
+Hooks are a set of special functions that can be used to customize Omeka's existing behavior. Hooks are activated or "fired" at regular points in Omeka's code and if you add your own function onto one of Omeka's preexisting hook, it will be called at those regular points as well. These regular points in the code are called "Actions."
+
+Actions are functions performed when a certain event occurs, such as saving a record, deleting a record, rendering some kinds of pages, constructing the navigation menu, etc. At these regular points, the Hook takes your special function and passes it into a callback function (a function whose parameter is another function). The callback function simply takes the data that your function returns and then uses it.
+
+A simple example is the install hook. Let's say you have a function that calls Omeka's add_option hook. In your plugin class, you first add it to an array in your plugin class.
+
+php   ```
+      protected $_hooks = array('install');
+      ```
+Then you have a function with the word "hook" and then in CamelCase the name of the hook.
+In this case, we just have it add the 'alt_text_data' option to our database and set the default value to 'title'. Thus, when our plugin is installed, this hook fires.
+
+php   ```
+      function hookInstall()
+          {
+            set_option('alt_text_data', 'title');
+          }
+      ```
+For more information on hooks, see [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html).
 
 ## Filters
+
+Filters modify information and like hooks are activated at regular points in the code (see Understanding Filters).
+You can add your own functions calls in a filter to add data, such as adding an additional link to the navigation link array.
 
 See [OmekaDoc's Tutorial on Understand Filters ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFilters.html) for more information.
 
 ## Models, Views, and Controllers
+Quoted directly from [Omeka's 1.x documentation on the webarchiver](https://web.archive.org/web/20170728215119/http://omeka.org:80/codex/MVC_Pattern_and_URL_Paths_in_Omeka): "The Model-View-Controller pattern is designed to help manage the tasks of describing an object in the database (Model), managing the retrieval and manipulation of that data (Controller), and formatting it for display (View). Keeping these three areas separate makes it easier to understand, maintain, and develop your code. Not every plugin will need to make use of this architecture, but for complex tasks it is essential to understand."
 
-"The Model-View-Controller pattern is designed to help manage the tasks of describing an object in the database (Model), managing the retrieval and manipulation of that data (Controller), and formatting it for display (View). Keeping these three areas separate makes it easier to understand, maintain, and develop your code. Not every plugin will need to make use of this architecture, but for complex tasks it is essential to understand."
+### Model
+A Model describes what data is stored in the database for each kind of object. For instance, there are models for Users, Items, Collections, and Files. In the database, a file stores data for its id, item order, size, filename, and original filename as well as many other things. Thus the model for a file includes
+php ```
+    public $item_id;
+    public $order;
+    public $filename;
+    public $original_filename;
+    public $size = 0;
+    ```
+Think of the Model as just the core data representing the thing you are working with: the stuff in the database. Plugins can define their own Models as needed.
 
-See Omeka's [1.x documentation](https://web.archive.org/web/20170728215119/http://omeka.org:80/codex/MVC_Pattern_and_URL_Paths_in_Omeka) on the web archiver for further information on Models, Views, and Controllers.
-
-Redirect to other resources
-Rough understanding of what each one does
+### View
+The View is the code for the webpage that's displayed.
 
 # Getting Started With Plugin Development
 
