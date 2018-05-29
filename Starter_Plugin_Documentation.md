@@ -55,18 +55,18 @@ Actions are functions performed when a certain event occurs, such as saving a re
 
 A simple example is the install hook. Let's say you have a function that calls Omeka's add_option hook. In your plugin class, you first add it to an array in your plugin class.
 
-php   ```
-      protected $_hooks = array('install');
-      ```
+```PHP
+  protected $_hooks = array('install');
+```
 Then you have a function with the word "hook" and then in CamelCase the name of the hook.
 In this case, we just have it add the 'alt_text_data' option to our database and set the default value to 'title'. Thus, when our plugin is installed, this hook fires.
 
-php   ```
-      function hookInstall()
-          {
-            set_option('alt_text_data', 'title');
-          }
-      ```
+```PHP
+  function hookInstall()
+  {
+    set_option('alt_text_data', 'title');
+  }
+```
 For more information on hooks, see [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html).
 
 ## Filters
@@ -81,21 +81,25 @@ Quoted directly from [Omeka's 1.x documentation on the webarchiver](https://web.
 
 ### Model
 A Model describes what data is stored in the database for each kind of object. For instance, there are models for Users, Items, Collections, and Files. In the database, a file stores data for its id, item order, size, filename, and original filename as well as many other things. Thus the model for a file includes
-php ```
-    public $item_id;
-    public $order;
-    public $filename;
-    public $original_filename;
-    public $size = 0;
-    ```
+```
+  public $item_id;
+  public $order;
+  public $filename;
+  public $original_filename;
+  public $size = 0;
+```
 Think of the Model as just the core data representing the thing you are working with: the stuff in the database. Plugins can define their own Models as needed.
 
 ### View
-The View is the code for the webpage that's displayed.
+The View is the code for the webpage that's displayed. It's usually an HTML page with PHP in it.
 
-# Getting Started With Plugin Development
+### Controller
+Arguably the most complicated of the three, Controllers direct what happens with data when a request is made to the site. Depending on the request, the Controller will retrieve the data from the database, manipulate it if necessary, and then pass it to a View to display.
+In Omeka, Controllers have methods called action-methods. Each Action corresponds to a particular View and is called when its View is loaded. The View then handles the display to the user.
+If you have a controller at admin/my-plugin/controllers/controller-name/ with an Action, it's corresponding view for that Action will be MyPlugin/views/admin/controller-name/action-name.php.
+For instance for the indexAction in IndexController.php located at AccessibilityPlus/controllers, its' corresponding view index.php is in AccessibilityPlus/views/admin/index/.
 
-Then your final section would focus on how all this is implemented in omeka itself. Does that make sense?
+# Getting Started With Omeka Plugin Development
 
 See [OmekaDoc's Tutorial on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for more information.
 
@@ -104,11 +108,13 @@ See 1.x tutorial: https://web.archive.org/web/20171004172739/http://omeka.org/co
 
 # Components of This Plugin
 
+Then your final section would focus on how all this is implemented in Omeka itself.
+
 ## Main Plugin File: AccessibilityPlusPlugin.php
 
 Information about the main file and how it works.
 
-## Model: Settings.php
+## Form: Settings.php
 
 ## Controller: IndexController.php
 
