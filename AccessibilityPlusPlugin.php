@@ -4,7 +4,8 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_hooks = array(
         'define_acl',
-        'install'
+        'install',
+        'uninstall'
     );
 
     protected $_filters = array(
@@ -31,10 +32,16 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     //sets the default chosen metadata to the alt_text_data as 'title'
-    /*public function hookInstall()
+    public function hookInstall()
     {
-        set_option('alt_text_data', 'title');
-    }*/
+        set_option('alt_text_data', 'Title');
+    }
+
+    //removes the 'alt_text_data' option from the database when the plugin is uninstalled
+    public function hookUninstall()
+    {
+        delete_option('alt_text_data');
+    }
 
     //hooks into the File Markup filter
     public function filterFileMarkup($html, $args)
@@ -46,21 +53,20 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         $posStart = strpos($html, 'alt');
         $posStop = strpos($html, 'title');
         $length = $posStop - $posStart;
-        //gets the item image and gets the requested metadata from it
-        $item = $file->getItem();
-
         $newAlt = NULL;
         $selected_option = get_option('alt_text_data');
         //checks if the option has been set in the options table or not
         if ($selected_option){
-            $newAlt = metadata($item, array('Dublin Core', $selected_option));
+            $newAlt = metadata($file, array('Dublin Core', $selected_option));
         }
         //if no option set or if the requested metadata is missing, use the image title instead
         if (!$newAlt){
+            //gets the item image and gets the requested metadata from it
+            $item = $file->getItem();
             $newAlt = metadata($item, array('Dublin Core', 'Title'));
-            //if the image is untitled, allow the $html to use the filename
+            //if the image is untitled, set the alt-text as "Untitled Image"
             if ("$newAlt" == '[Untitled]'){
-                return $html;
+                $newAlt = "Untitled Image";
             }
         }
         $newCode = 'alt="'.$newAlt.'"';
