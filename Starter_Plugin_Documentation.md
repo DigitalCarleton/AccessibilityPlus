@@ -91,7 +91,7 @@ A Model describes what data is stored in the database for each kind of object. F
 Think of the Model as just the core data representing the thing you are working with: the stuff in the database. Plugins can define their own Models as needed.
 
 ### View
-The View is the code for the webpage that's displayed. It's usually an HTML page with PHP in it.
+The View is the code for the webpage that's displayed. It's usually an HTML page with maybe some PHP in it.
 
 ### Controller
 Arguably the most complicated of the three, Controllers direct what happens with data when a request is made to the site. Depending on the request, the Controller will retrieve the data from the database, manipulate it if necessary, and then pass it to a View to display.
@@ -101,7 +101,27 @@ For instance for the indexAction in IndexController.php located at Accessibility
 
 # Getting Started With Omeka Plugin Development
 
-See [OmekaDoc's Tutorial on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for more information.
+Omeka has a unique but simple structure for their plugins and advises you to follow their "best practices."
+
+## Plugin Directory Structure
+I highly recommend reading the original tutorial on [OmekaDocs on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for clearer information. However, to summarize what they say:
+* Your plugin folder should be CamelCased, Unique, Simple and Descriptive
+* Your plugin folder belongs in the omeka/plugins folder.
+* If you plugin folder is Foo then your main plugin file should be named FooPlugin.php
+* Your main plugin file should be a subclass of [Omeka_Plugin_AbstractPlugin](http://omeka.readthedocs.io/en/latest/Tutorials/understandingOmeka_Plugin_AbstractPlugin.html).
+* You should have a plugin.ini file in your plugin folder, which contains general information about your plugin, and the other plugin files.
+
+## Better Practices
+These a few of many recommendations from Omeka's [Best Practices for Plugin Development Tutorial](http://omeka.readthedocs.io/en/latest/Tutorials/bestPracticesPlugins.html). It contains greater detail and I recommend you go take a look at it.
+1. Make methods camelCase and start private and protected methods with an underscore.
+2. Be careful to not change standard Omeka behavior when overwriting methods.
+3. Use View Helpers, which are helper methods for the view class, instead of global functions, which pertain to the whole of the class.
+4. Send all processes that may run longer than a typical web process to a job by creating a class that extends Omeka_Job_AbstractJob and running a function from it. Either run using default or long-running depending on how long it’ll take.
+5. Set up your plugin’s configuration page using the framework Omeka provides for you. When a user installs or upgrades your plugin, Omeka redirects the user to the configuration page. The data the user submits on that page is sent as a POST (an array of data from the submitted form). You can use the config_form hook to handle that POST and update the options or other settings. You can keep the code to do this in a config_form.php include file.
+6. Omeka lets you build forms for records with different options available.
+7. Use Omeka’s search_query_types filter and the search_sql hook to add a new search type to Omeka’s search form. This can make your record full-text searchable and customize it with three search query types: keyword (full text), boolean, and exact match.
+
+## Omeka Forms
 
 See [OmekaDoc's Tutorial on Best Practices For Plugin Development ](http://omeka.readthedocs.io/en/latest/Tutorials/bestPracticesPlugins.html) for more information.
 See 1.x tutorial: https://web.archive.org/web/20171004172739/http://omeka.org/codex/Plugin_Writing_Best_Practices
