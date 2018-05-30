@@ -3,7 +3,7 @@
 Also be working on full docs in github repo (readme, etc), written at a mid-level guiding way (less in the weeds than omeka documentation - write to you, 6 months ago)
 https://www.deque.com/blog/great-alt-text-introduction/
 
-When I first began plugin development for Omeka, I had no experience in web development other than just completing a PHP tutorial. When going through [Omeka's Tutorials](http://omeka.readthedocs.io/en/latest/Tutorials/index.html) on OmekadDocs, the website that holds their documentation, I initially found it confusing. I took me awhile to make sense of basic concepts. This starter plugin documentation is designed to help individuals with some CS background but who are new to either web development or working with Omeka, understand basic ideas of web development and how to build plugins in Omeka.
+When I first began plugin development for Omeka, I had no experience in web development other than just completing a PHP tutorial. When going through [Omeka's Tutorials](http://omeka.readthedocs.io/en/latest/Tutorials/index.html) on OmekadDocs, the website that holds their documentation, I initially found it confusing. I took me awhile to make sense of basic concepts. This starter plugin documentation is designed to help individuals with an understanding of PHP but who are new to either back-end web development or working with Omeka. From this, they should learn basic ideas of web development and how to build plugins in Omeka.
 
 This documentation is structured so that it first explains the concepts of:
 1. Web Development Basics
@@ -107,6 +107,8 @@ Omeka has a unique but simple structure for their plugins and advises you to fol
 * element sets and elements
     "Element Sets are standardized metadata categories that enable you to consistently classify, identify, and sort the digital resources in your Omeka database." [Omekadocs](https://omeka.org/classic/docs/Admin/Settings/Element_Sets/).
     An element is a single attribute of metadata (i.e. Title).
+* [Dublin Core](http://dublincore.org/about/)
+  An Element Set used by Omeka.
 * global function
     Global functions are stored in globals.php. They can be called anywhere in the code.
 * view helper
@@ -197,7 +199,7 @@ The uninstall hook works in a similar way.
 ### Filters Example
 As mentioned before, filters modify information and always receive two parameters.
 
-The admin_navigation_main filter is a little different because it has a parameter. The $args variable is passed into the hook. $args is an array that contains the different arguments for the hook. In this case, $navArray is a two-dimensional array (an array of arrays) that is used by Zend to generate the top-level navigation for the admin theme. Our function passes in 'AccessibilityPlus' with its label for the navigation button and generated url to the array. Then by returning it this filter function adds AccessibilityPlus to the admin navigation sidebar menu.
+The admin_navigation_main filter is a little different because it has a parameter. The `$args` variable is passed into the hook. `$args` is an array that contains the different arguments for the hook. In this case, `$navArray` is a two-dimensional array (an array of arrays) that is used by Zend to generate the top-level navigation for the admin theme. Our function passes in 'AccessibilityPlus' with its label for the navigation button and generated url to the array. Then by returning it this filter function adds AccessibilityPlus to the admin navigation sidebar menu.
 
 ```PHP
 public function filterAdminNavigationMain($navArray)
@@ -210,15 +212,61 @@ public function filterAdminNavigationMain($navArray)
 }
 ```
 
-//hooks into the File Markup filter
+The file_markup filter function is more complicated. They key lines of the function are shown below.
 ```PHP
 public function filterFileMarkup($html, $args)
 {
-
+  $file = $args['file'];
+  if($file->hasThumbnail() || $file->hasFullsize())
+  {
+      $selected_option = get_option('alt_text_data');
+      $newAlt = metadata($file, array('Dublin Core', $selected_option));
+      $newCode = 'alt="'.$newAlt.'"';
+      $html = substr_replace($html, $newCode, $posStart, $length);
+      return $html;
+  }
 }
 ```
+This time we have two parameters passed to us. The first one is $html, which is the HTML to display a file. Similar to before, $args is passed to us.
+```PHP
+$file = $args['file'];
+if($file->hasThumbnail() || $file->hasFullsize())
+```
+From `$args`, we retrieve the file record being marked up by FileMarkup.php. Then we ask whether it has an Thumbnail or full size image.
+
+If it does, then we retrieve our 'alt_text_data' option from the database (remember `hookInstall()` added it to the database). `$selected_option` will be something like 'Title' or 'Description'. Then we use the [metadata() function](https://omeka.readthedocs.io/en/latest/Reference/libraries/globals/metadata.html)–one of Omeka's many global functions–to retrieve from the Dublin Core a piece of metadata. The type of metadata is specified by `$selected_option` and comes from our `$file`.
+
+Once we have our metadata–referenced by `$newAlt`–we create the HTML code to represent our alt-text and assign it to $newCode. Then in the `$html`, we use the `substr_replace()` PHP function to replace the alt-text of the image with `$newCode`. (You can see how we found `$posStart` and `$length` using `strpos()` in the main code).
+
+At the end, we return the $html in its altered state.
 
 ## Form: Settings.php
+Our settings form is the key part of the Admin view: it lets a user select from a dropdown menu  the metadata element they want to use as alt-text for an image file.
+
+First, we create our form with its initializing function with the following:
+```PHP
+class AccessibilityPlus_Form_Settings extends Omeka_Form
+{
+    public function init()
+    {
+        parent::init();
+    }
+}    
+```
+Before creating our dropdown menu, we need to retrieve the Dublin Core elements from the database.
+```PHP
+$db = get_db();
+$valueOptions = array();
+$table = $db->getTable('Element');
+$elements = $table->fetchObjects('SELECT * FROM omeka_elements WHERE element_set_id = 1');
+foreach ($elements as $element){
+  $element_title = $element->getProperty('name');
+  $valueOptions["$element_title"] = "$element_title";
+}
+```
+`$db` is the [database manager object](http://omeka.readthedocs.io/en/latest/Reference/libraries/Omeka/Db.html) of Omeka.
+
+By extending Omeka_Form, we can use
 
 ## Controller: IndexController.php
 
