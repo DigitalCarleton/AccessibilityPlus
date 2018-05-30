@@ -97,26 +97,26 @@ Omeka has a unique but simple structure for their plugins and advises you to fol
 
 ## Omeka (And General) Terminology
 * plugin
-    A plugin or plug-in is a piece of software that adds additional features to an existing computer program. See [Omekadoc's Working With Plugins](https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins/).
+    - A plugin or plug-in is a piece of software that adds additional features to an existing computer program. See [Omekadoc's Working With Plugins](https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins/).
 * record
-    A record is a object pulled from Omeka database. This can be anything from a file to an element to a user.
+    - A record is a object pulled from Omeka database. This can be anything from a file to an element to a user.
 * item
-    An item is what makes up the content of Omeka. It is represented by a record.
+    - An item is what makes up the content of Omeka. It is represented by a record.
 * file
-    Files are uploaded to items on Omeka. A file is represented by a record.
+    - Files are uploaded to items on Omeka. A file is represented by a record.
 * metadata
-    metadata is information about files or items (i.e. Title, Date Created, Creator, etc.).
+    - metadata is information about files or items (i.e. Title, Date Created, Creator, etc.).
 * element sets and elements
-    "Element Sets are standardized metadata categories that enable you to consistently classify, identify, and sort the digital resources in your Omeka database." [Omekadocs](https://omeka.org/classic/docs/Admin/Settings/Element_Sets/).
+    - "Element Sets are standardized metadata categories that enable you to consistently classify, identify, and sort the digital resources in your Omeka database." [Omekadocs](https://omeka.org/classic/docs/Admin/Settings/Element_Sets/).
     An element is a single attribute of metadata (i.e. Title).
 * [Dublin Core](http://dublincore.org/about/)
-  An Element Set used by Omeka.
+    - An Element Set used by Omeka.
 * global function
-    Global functions are stored in globals.php. They can be called anywhere in the code.
+    - Global functions are stored in globals.php. They can be called anywhere in the code.
 * view helper
-    View helpers are objects in Omeka with functions to assist views. Their functions can only be called by them as opposed to global functions.
+    - View helpers are objects in Omeka with functions to assist views. Their functions can only be called by them as opposed to global functions.
 * (database) options
-    Options in a database is information stored in the options table. It can be set with the set_option($option_name, $value) function, retrieved with get_option($option_name), and removed with delete_option($option_name).
+    - Options in a database is information stored in the options table. It can be set with the set_option($option_name, $value) function, retrieved with get_option($option_name), and removed with delete_option($option_name).
 
 ## Plugin Directory Structure
 I highly recommend reading the original tutorial on [OmekaDocs on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for clearer information. However, to summarize what they say:
@@ -142,7 +142,7 @@ See 1.x tutorial: https://web.archive.org/web/20171004172739/http://omeka.org/co
 ## Omeka Forms
 While some plugins write out forms using standard HTML, it is better to take advantage of how Omeka uses Zend’s Form_Element class for building forms. After creating a Omeka_Form object, you use the addElement() method which takes three parameters.
 1. String $element - which allows you to choose what type of element it is.
-    This can include: button, captcha, checkbox, file, multicheckbox, multiselect, radio, select, submit, text, and textarea.
+    - This can include: button, captcha, checkbox, file, multicheckbox, multiselect, radio, select, submit, text, and textarea.
 2. String $name - The name attribute for the form element
 3. array $options - Additional options for the form element, such as the label, description, and required.
 Also see [OmekaDoc's Tutorial on Understanding Form Elements](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFormElements.html).
@@ -157,14 +157,14 @@ WARNING: As this plugin is updated, differences may occur between what this docu
 This plugin has two primary parts:
 1. The form on the admin side that lets users select an element of file metadata.
   * index.php
-      A view with the HTML for the form's webpage.
+      - A view with the HTML for the form's webpage.
   * Settings.php
-      Creates the form with the dropdown menu, showing the different types of metadata.
+      - Creates the form with the dropdown menu, showing the different types of metadata.
   * IndexController.php
-      A controller that takes information from the form and updates the options table in the database.
+      - A controller that takes information from the form and updates the options table in the database.
 2. The code that generates the new alt text.
   * AccessibilityPlusPlugin.php
-      Examines the set option from the databases, retrieves the corresponding metadata and generates the alternative text for images.
+      - Examines the set option from the databases, retrieves the corresponding metadata and generates the alternative text for images.
 
 ## Main Plugin File: AccessibilityPlusPlugin.php
 
