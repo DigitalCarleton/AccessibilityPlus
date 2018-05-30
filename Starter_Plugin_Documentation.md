@@ -11,6 +11,8 @@ This documentation is structured so that it first explains the concepts of:
 3. Getting Started With Omeka Classic Plugin Development
 Then it walks you through the different files in this plugin and how they work. During this part, the ideas introduced in the first few sections will be further explained and demonstrated using the plugin.
 
+If you have questions about Omeka plugin development or Omeka in general, post to their form at: https://forum.omeka.org/.
+
 # Web Development Basics
 
 ## The front-end and the back-end
@@ -144,6 +146,7 @@ While some plugins write out forms using standard HTML, it is better to take adv
 2. String $name - The name attribute for the form element
 3. array $options - Additional options for the form element, such as the label, description, and required.
 Also see [OmekaDoc's Tutorial on Understanding Form Elements](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFormElements.html).
+For in-depth information, see [Creating Forms Using Zend_Form](https://framework.zend.com/manual/1.10/en/zend.form.forms.html).
 
 # Components of This Plugin
 With this brief overview of back-end web development, Zend Frameworks, and Omeka Classic Plugin Development, I will you walk-through the different files of this plugin and how they fit together.
@@ -238,7 +241,7 @@ If it does, then we retrieve our 'alt_text_data' option from the database (remem
 
 Once we have our metadata–referenced by `$newAlt`–we create the HTML code to represent our alt-text and assign it to $newCode. Then in the `$html`, we use the `substr_replace()` PHP function to replace the alt-text of the image with `$newCode`. (You can see how we found `$posStart` and `$length` using `strpos()` in the main code).
 
-At the end, we return the $html in its altered state.
+At the end, we return `$html` with our modification.
 
 ## Form: Settings.php
 Our settings form is the key part of the Admin view: it lets a user select from a dropdown menu  the metadata element they want to use as alt-text for an image file.
@@ -255,8 +258,8 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
 ```
 Before creating our dropdown menu, we need to retrieve the Dublin Core elements from the database.
 ```PHP
-$db = get_db();
 $valueOptions = array();
+$db = get_db();
 $table = $db->getTable('Element');
 $elements = $table->fetchObjects('SELECT * FROM omeka_elements WHERE element_set_id = 1');
 foreach ($elements as $element){
@@ -264,10 +267,80 @@ foreach ($elements as $element){
   $valueOptions["$element_title"] = "$element_title";
 }
 ```
-`$db` is the [database manager object](http://omeka.readthedocs.io/en/latest/Reference/libraries/Omeka/Db.html) of Omeka.
+`$valueOptions` is the array that will hold the Dublin Core elements. We will get these elements through `$db`, which is the [database manager object](http://omeka.readthedocs.io/en/latest/Reference/libraries/Omeka/Db.html) and lets us interact with the Omeka database.
+For instance, we use `$table = $db->getTable('Element')` to retrieve the [database table](http://omeka.readthedocs.io/en/latest/Reference/libraries/Omeka/Db/Table.html) of elements. Then from `$table` we use `fetchObjects()` to retrieve all the elements using an SQL query.
+The `foreach` loops goes through each element record, retrieves their `name` from the database, and then adds it to the `$valueOptions` array using key-value pairing.
 
-By extending Omeka_Form, we can use
+By extending Omeka_Form, we can use `$this->addElement($element, $name, $options)` to build our form instead of writing the HTML. The following code builds our dropdown menu:
+```PHP
+$this->addElement(
+    'select',
+    'DublinCore',
+    array(
+        'label' => 'Dublin Core Metadata Types',
+        'multiOptions' => $valueOptions,
+      )
+);
+```
+The element is of type 'select'. Its name is 'DublinCore'. The label is 'Dublin Core Metadata Types'. Its `multiOptions` are created using `$valueOptions`.
+
+Our other element is the submit button, which is built similarly.
+
+For aesthetic purposes each are put in their display groups, which create virtual groupings of elements for display purposes.
+```php
+$this->addDisplayGroup(
+    array('DublinCore'),
+    'Dropdownmenu'
+);
+```
+Simply, you pass in an array with the names of the different form elements, and then give the grouping a name.
 
 ## Controller: IndexController.php
+When the submit button of the form is pressed, the information from the form is sent to the controller, IndexController.php.
+```PHP
+class AccessibilityPlus_IndexController extends Omeka_Controller_AbstractActionController
+{
+  public function indexAction()
+  {
+    $form = new AccessibilityPlus_Form_Settings();
+    $this->view->form = $form;
+
+    $request = $this->getRequest();
+    if ($request->isPost()) {
+        if ($form->isValid($request->getPost())) {
+            $options = $form->getValues();
+            foreach ($options as $value) {
+                set_option('alt_text_data', $value);
+            }
+        }
+    }
+    return;
+  }
+}
+```
+The action function is `indexAction()`, which is a special action function for the view index.php–a view that is loaded from the top-level navigation for the admin theme. This Controller is run when the page request is sent. First, it creates a form and sets it to the view using:
+```PHP
+$form = new AccessibilityPlus_Form_Settings();
+$this->view->form = $form;
+```
+If also you recall, above, `AccessibilityPlus_Form_Settings()` is part of the constructor for the Omeka form in Settings.php. Thus it is generating the form from the file.
+Then it handles the form data:
+```PHP
+$request = $this->getRequest();
+if ($request->isPost()) {
+    if ($form->isValid($request->getPost())) {
+        $options = $form->getValues();
+        foreach ($options as $value) {
+            set_option('alt_text_data', $value);
+        }
+    }
+}
+return;
+```
+It uses `getRequest()` to retrieve a page request. If `$request->isPost()` meaning if the information is from a POST (returned from an HTML form). Then since Zend_Form doesn't access data from the POST directly, we have to pass the data in. One of the ways this is done is by the `isValid()` call. If that call returns data, our following lines execute.
+
+`$options = $form->getValues()` retrieves the submitted metadata element from our dropdown menu. However, it is an array, because forms can return multiple values. Thus we use a foreach loop to retrieve the `$value` from `$options` and then use `set_option('alt_text_data', $value);` to update the options table in the database.
 
 ## View: index.php
+Because the controller passes to our index.php view the Settings form using `$this->view->form = $form;`, the settings form is created in index.php with the simple line: `echo $form;`.
+The rest of index.php is simple PHP, [Omeka's img() function](http://omeka.readthedocs.io/en/latest/Reference/libraries/globals/img.html), and HTML code.
