@@ -3,7 +3,6 @@
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_hooks = array(
-        'define_acl',
         'install',
         'uninstall'
     );
@@ -12,24 +11,6 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         'file_markup',
         'admin_navigation_main'
     );
-
-    //Adds AccessibilityPlus as part of the admin navigation sidebar menu
-    public function filterAdminNavigationMain($navArray)
-    {
-        $navArray['AccessibilityPlus'] = array(
-            'label' => __("AccessibilityPlus"),
-            'uri' => url('accessibility-plus')
-        );
-        return $navArray;
-    }
-
-    //adds 'AccessibilityPlus' to the Access Control List
-    public function hookDefineAcl($args)
-    {
-        $acl = $args['acl'];
-        $acl->addResource('AccessibilityPlus');
-        $acl->allow(null, 'AccessibilityPlus');
-    }
 
     //sets the default chosen metadata to the alt_text_data as 'title'
     public function hookInstall()
@@ -41,6 +22,16 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookUninstall()
     {
         delete_option('alt_text_data');
+    }
+
+    //Adds AccessibilityPlus to the admin navigation sidebar menu
+    public function filterAdminNavigationMain($navArray)
+    {
+        $navArray['AccessibilityPlus'] = array(
+            'label' => __("AccessibilityPlus"),
+            'uri' => url('accessibility-plus')
+        );
+        return $navArray;
     }
 
     //hooks into the File Markup filter

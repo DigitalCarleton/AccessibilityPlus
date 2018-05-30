@@ -3,7 +3,13 @@
 Also be working on full docs in github repo (readme, etc), written at a mid-level guiding way (less in the weeds than omeka documentation - write to you, 6 months ago)
 https://www.deque.com/blog/great-alt-text-introduction/
 
-Information about this starter plugin documentation and the plugin itself
+When I first began plugin development for Omeka, I had no experience in web development other than just completing a PHP tutorial. When going through [Omeka's Tutorials](http://omeka.readthedocs.io/en/latest/Tutorials/index.html) on OmekadDocs, the website that holds their documentation, I initially found it confusing. I took me awhile to make sense of basic concepts. This starter plugin documentation is designed to help individuals with some CS background but who are new to either web development or working with Omeka, understand basic ideas of web development and how to build plugins in Omeka.
+
+This documentation is structured so that it first explains the concepts of:
+1. Web Development Basics
+2. Zend Framework
+3. Getting Started With Omeka Classic Plugin Development
+Then it walks you through the different files in this plugin and how they work. During this part, the ideas introduced in the first few sections will be further explained and demonstrated using the plugin.
 
 # Web Development Basics
 
@@ -43,36 +49,20 @@ PHP is a server-side scripting language designed for web development. It can be 
 # Zend Framework
 Zend Framework is a collection of PHP packages that can be used to develop web applications using object-oriented code. [Omeka is built on Zend Framework 2](http://omeka.readthedocs.io/en/latest/whatsnew/2.0.html) and consequently, the code uses a Models Views and Controllers or "MVC" framework and one must interact it using hooks and filters. Both of these concepts will be explained. [Learn more about Zend Framework](https://framework.zend.com/about).
 
-The MVC framework info would go there along with hooks and filters as a basic means of extending a framework.
-MVC, hooks, and filters work with the Zend Framework
-
 ## Hooks
-Hooks and filters are a basic way to extend an existing platform or framework with plugins and themes.
+Hooks and filters are a basic way to extend an existing platform or framework with plugins and themes. In this case, we use them to extend the Zend Framework Omeka is built on.
 
 Hooks are a set of special functions that can be used to customize Omeka's existing behavior. Hooks are activated or "fired" at regular points in Omeka's code and if you add your own function onto one of Omeka's preexisting hook, it will be called at those regular points as well. These regular points in the code are called "Actions."
 
 Actions are functions performed when a certain event occurs, such as saving a record, deleting a record, rendering some kinds of pages, constructing the navigation menu, etc. At these regular points, the Hook takes your special function and passes it into a callback function (a function whose parameter is another function). The callback function simply takes the data that your function returns and then uses it.
 
-A simple example is the install hook. Let's say you have a function that calls Omeka's add_option hook. In your plugin class, you first add it to an array in your plugin class.
-
-```PHP
-  protected $_hooks = array('install');
-```
-Then you have a function with the word "hook" and then in CamelCase the name of the hook.
-In this case, we just have it add the 'alt_text_data' option to our database and set the default value to 'title'. Thus, when our plugin is installed, this hook fires.
-
-```PHP
-  function hookInstall()
-  {
-    set_option('alt_text_data', 'title');
-  }
-```
 For more information on hooks, see [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html).
 
 ## Filters
 
-Filters modify information and like hooks are activated at regular points in the code (see Understanding Filters).
-You can add your own functions calls in a filter to add data, such as adding an additional link to the navigation link array.
+Filters modify information and like hooks are activated at regular points in the code. However, they are focused on modifying and returning data instead of simply executing code or outputting data in some particular place. Filter functions always take two parameters.
+
+An example of how they modify data is by adding an additional link to the navigation link array and then returning it. Then when the navigation link array is used to create links, the addition link will be generated.
 
 See [OmekaDoc's Tutorial on Understand Filters ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFilters.html) for more information.
 
@@ -99,9 +89,30 @@ In Omeka, Controllers have methods called action-methods. Each Action correspond
 If you have a controller at admin/my-plugin/controllers/controller-name/ with an Action, it's corresponding view for that Action will be MyPlugin/views/admin/controller-name/action-name.php.
 For instance for the indexAction in IndexController.php located at AccessibilityPlus/controllers, its' corresponding view index.php is in AccessibilityPlus/views/admin/index/.
 
-# Getting Started With Omeka Plugin Development
+# Getting Started With Omeka Classic Plugin Development
 
 Omeka has a unique but simple structure for their plugins and advises you to follow their "best practices."
+
+## Omeka (And General) Terminology
+* plugin
+    A plugin or plug-in is a piece of software that adds additional features to an existing computer program. See [Omekadoc's Working With Plugins](https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins/).
+* record
+    A record is a object pulled from Omeka database. This can be anything from a file to an element to a user.
+* item
+    An item is what makes up the content of Omeka. It is represented by a record.
+* file
+    Files are uploaded to items on Omeka. A file is represented by a record.
+* metadata
+    metadata is information about files or items (i.e. Title, Date Created, Creator, etc.).
+* element sets and elements
+    "Element Sets are standardized metadata categories that enable you to consistently classify, identify, and sort the digital resources in your Omeka database." [Omekadocs](https://omeka.org/classic/docs/Admin/Settings/Element_Sets/).
+    An element is a single attribute of metadata (i.e. Title).
+* global function
+    Global functions are stored in globals.php. They can be called anywhere in the code.
+* view helper
+    View helpers are objects in Omeka with functions to assist views. Their functions can only be called by them as opposed to global functions.
+* (database) options
+    Options in a database is information stored in the options table. It can be set with the set_option($option_name, $value) function, retrieved with get_option($option_name), and removed with delete_option($option_name).
 
 ## Plugin Directory Structure
 I highly recommend reading the original tutorial on [OmekaDocs on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for clearer information. However, to summarize what they say:
@@ -121,18 +132,91 @@ These a few of many recommendations from Omeka's [Best Practices for Plugin Deve
 6. Omeka lets you build forms for records with different options available.
 7. Use Omeka’s search_query_types filter and the search_sql hook to add a new search type to Omeka’s search form. This can make your record full-text searchable and customize it with three search query types: keyword (full text), boolean, and exact match.
 
-## Omeka Forms
-
 See [OmekaDoc's Tutorial on Best Practices For Plugin Development ](http://omeka.readthedocs.io/en/latest/Tutorials/bestPracticesPlugins.html) for more information.
 See 1.x tutorial: https://web.archive.org/web/20171004172739/http://omeka.org/codex/Plugin_Writing_Best_Practices
 
-# Components of This Plugin
+## Omeka Forms
+While some plugins write out forms using standard HTML, it is better to take advantage of how Omeka uses Zend’s Form_Element class for building forms. After creating a Omeka_Form object, you use the addElement() method which takes three parameters.
+1. String $element - which allows you to choose what type of element it is.
+    This can include: button, captcha, checkbox, file, multicheckbox, multiselect, radio, select, submit, text, and textarea.
+2. String $name - The name attribute for the form element
+3. array $options - Additional options for the form element, such as the label, description, and required.
+Also see [OmekaDoc's Tutorial on Understanding Form Elements](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFormElements.html).
 
-Then your final section would focus on how all this is implemented in Omeka itself.
+# Components of This Plugin
+With this brief overview of back-end web development, Zend Frameworks, and Omeka Classic Plugin Development, I will you walk-through the different files of this plugin and how they fit together.
+
+WARNING: As this plugin is updated, differences may occur between what this documentation discusses and the content of the plugin. However, these differences should be minor and the content described here should still be understandable.
+
+## Overall Plugin Layout
+This plugin has two primary parts:
+1. The form on the admin side that lets users select an element of file metadata.
+  * index.php
+      A view with the HTML for the form's webpage.
+  * Settings.php
+      Creates the form with the dropdown menu, showing the different types of metadata.
+  * IndexController.php
+      A controller that takes information from the form and updates the options table in the database.
+2. The code that generates the new alt text.
+  * AccessibilityPlusPlugin.php
+      Examines the set option from the databases, retrieves the corresponding metadata and generates the alternative text for images.
 
 ## Main Plugin File: AccessibilityPlusPlugin.php
 
-Information about the main file and how it works.
+### Overview
+This main plugin file, AccessibilityPlusPlugin.php, encodes the two hooks and two filters used by the plugin. This is important for installing and uninstalling the plugin, navigating on the admin sidebar, and replacing the alt-text for images.
+
+The plugin class is declared as below:
+
+```PHP
+class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
+{
+
+}
+```
+
+### Hooks Example
+
+As mentioned before, Hooks are a way to alter the behavior of Omeka. A simple example in AccessibilityPlusPlugin.php is the install hook. In your plugin class, you first add it to an array in your plugin class.
+
+```PHP
+  protected $_hooks = array('install');
+```
+Then you have a function with the word "hook" and then in CamelCase the name of the hook.
+In this case, we just have it add the 'alt_text_data' option to our database and set the default value to 'Title'. Thus, when our plugin is installed, this hook fires.
+
+```PHP
+  function hookInstall()
+  {
+    set_option('alt_text_data', 'Title');
+  }
+```
+
+The uninstall hook works in a similar way.
+
+### Filters Example
+As mentioned before, filters modify information and always receive two parameters.
+
+The admin_navigation_main filter is a little different because it has a parameter. The $args variable is passed into the hook. $args is an array that contains the different arguments for the hook. In this case, $navArray is a two-dimensional array (an array of arrays) that is used by Zend to generate the top-level navigation for the admin theme. Our function passes in 'AccessibilityPlus' with its label for the navigation button and generated url to the array. Then by returning it this filter function adds AccessibilityPlus to the admin navigation sidebar menu.
+
+```PHP
+public function filterAdminNavigationMain($navArray)
+{
+    $navArray['AccessibilityPlus'] = array(
+        'label' => __("AccessibilityPlus"),
+        'uri' => url('accessibility-plus')
+    );
+    return $navArray;
+}
+```
+
+//hooks into the File Markup filter
+```PHP
+public function filterFileMarkup($html, $args)
+{
+
+}
+```
 
 ## Form: Settings.php
 
