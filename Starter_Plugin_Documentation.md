@@ -1,9 +1,8 @@
 # About This Starter Plugin Documentation
 
-Also be working on full docs in github repo (readme, etc), written at a mid-level guiding way (less in the weeds than omeka documentation - write to you, 6 months ago)
-https://www.deque.com/blog/great-alt-text-introduction/
+This starter plugin documentation is designed to teach individuals how to build a plugin for Omeka Classic in a a mid-level guiding way. This documentation assumes knowledge of HTML and PHP, but little else. This starter plugin documentation will refer to the files of this plugin. Though code snippets are included in this documentation, I recommend viewing those original files to see how everything fits together. There are also comments included in the plugin files, which also may help. Sometimes this documentation will have links to further resources, many of these are to [Omekadocs](https://omeka.org/classic/docs/)–the online documentation for Omeka. I recommend visiting those pages, especially if you're confused about any concepts. A fair amount of what I write comes from Omeakdocs: my goal is not to plagiarize or claim credit but to explain the concepts I learned from it in a way that makes sense to me in order to help the Omeka community grow.
 
-When I first began plugin development for Omeka, I had no experience in web development other than just completing a PHP tutorial. When going through [Omeka's Tutorials](http://omeka.readthedocs.io/en/latest/Tutorials/index.html) on OmekadDocs, the website that holds their documentation, I initially found it confusing. I took me awhile to make sense of basic concepts. This starter plugin documentation is designed to help individuals with an understanding of PHP but who are new to either back-end web development or working with Omeka. From this, they should learn basic ideas of web development and how to build plugins in Omeka.
+This is reason I wanted to write this tutorial: when I first began plugin development for Omeka, I had no experience in web development other than just completing a PHP tutorial. When going through [Omeka's Tutorials](http://omeka.readthedocs.io/en/latest/Tutorials/index.html) on OmekadDocs, I initially found it confusing. I took me awhile to make sense of basic concepts. Thus, this starter plugin documentation is designed to help individuals with an understanding of PHP but who are new to either back-end web development or working with Omeka. From this, they should learn basic ideas of web development and how to build plugins in Omeka.
 
 This documentation is structured so that it first explains the concepts of:
 1. Web Development Basics
@@ -58,7 +57,7 @@ Hooks are a set of special functions that can be used to customize Omeka's exist
 
 Actions are functions performed when a certain event occurs, such as saving a record, deleting a record, rendering some kinds of pages, constructing the navigation menu, etc. At these regular points, the Hook takes your special function and passes it into a callback function (a function whose parameter is another function). The callback function simply takes the data that your function returns and then uses it.
 
-For more information on hooks, see [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html).
+Examples of both hooks and filters will in the last main section of this documentation, but for more information and to see an example of a hooks on Omekadocs right now, visit [OmekaDoc's Tutorial on Understand Hooks ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingHooks.html).
 
 ## Filters
 
@@ -66,7 +65,7 @@ Filters modify information and like hooks are activated at regular points in the
 
 An example of how they modify data is by adding an additional link to the navigation link array and then returning it. Then when the navigation link array is used to create links, the addition link will be generated.
 
-See [OmekaDoc's Tutorial on Understand Filters ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFilters.html) for more information.
+Similarly to hooks, visit [OmekaDoc's Tutorial on Understand Filters ](http://omeka.readthedocs.io/en/latest/Tutorials/understandingFilters.html) for more information.
 
 ## Models, Views, and Controllers
 Quoted directly from [Omeka's 1.x documentation on the webarchiver](https://web.archive.org/web/20170728215119/http://omeka.org:80/codex/MVC_Pattern_and_URL_Paths_in_Omeka): "The Model-View-Controller pattern is designed to help manage the tasks of describing an object in the database (Model), managing the retrieval and manipulation of that data (Controller), and formatting it for display (View). Keeping these three areas separate makes it easier to understand, maintain, and develop your code. Not every plugin will need to make use of this architecture, but for complex tasks it is essential to understand."
@@ -91,6 +90,8 @@ In Omeka, Controllers have methods called action-methods. Each Action correspond
 If you have a controller at admin/my-plugin/controllers/controller-name/ with an Action, it's corresponding view for that Action will be MyPlugin/views/admin/controller-name/action-name.php.
 For instance for the indexAction in IndexController.php located at AccessibilityPlus/controllers, its' corresponding view index.php is in AccessibilityPlus/views/admin/index/.
 
+Examples of both views and controllers will be shown in the last main section of this documentation.
+
 # Getting Started With Omeka Classic Plugin Development
 
 Omeka has a unique but simple structure for their plugins and advises you to follow their "best practices."
@@ -114,9 +115,9 @@ Omeka has a unique but simple structure for their plugins and advises you to fol
 * global function
     - Global functions are stored in globals.php. They can be called anywhere in the code.
 * view helper
-    - View helpers are objects in Omeka with functions to assist views. Their functions can only be called by them as opposed to global functions.
+    - View helpers are objects in Omeka with functions to assist views. One must construct the view helper object to call one of those function.
 * (database) options
-    - Options in a database is information stored in the options table. It can be set with the set_option($option_name, $value) function, retrieved with get_option($option_name), and removed with delete_option($option_name).
+    - Options in a database is information stored in the options table. It can be set with the `set_option($option_name, $value)` function, retrieved with `get_option($option_name)`, and removed with `delete_option($option_name)`.
 
 ## Plugin Directory Structure
 I highly recommend reading the original tutorial on [OmekaDocs on Plugin Directory Structure ](http://omeka.readthedocs.io/en/latest/Tutorials/pluginStructure.html/) for clearer information. However, to summarize what they say:
