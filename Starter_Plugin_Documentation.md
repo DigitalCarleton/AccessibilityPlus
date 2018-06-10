@@ -345,3 +345,6 @@ It uses `getRequest()` to retrieve a page request. If `$request->isPost()` meani
 ## View: index.php
 Because the controller passes to our index.php view the Settings form using `$this->view->form = $form;`, the settings form is created in index.php with the simple line: `echo $form;`.
 The rest of index.php is simple PHP, [Omeka's img() function](http://omeka.readthedocs.io/en/latest/Reference/libraries/globals/img.html), and HTML code.
+
+# Conclusion
+To summarize, the database of a website stores communicate the information that makes up the content of a website. Back end web developers use server-side languages and tools to allow the database to communicate with the server and the software application so that the content will be displayed on the front-end. When working with Omeka–a content management system for digital archives–back end web developers who want to build plugins must work with the framework of Omeka. This means following the plugin Directory Structure, using models, views and controllers, building forms with Omeka, and taking advantage of its functions, listed in [OmekaDocs](https://omeka.org/classic/docs/). While it is possible to hardcode parts of plugins, such as forms, taking the time to understand the Omeka framework and working with it will save you more time in the long run.
