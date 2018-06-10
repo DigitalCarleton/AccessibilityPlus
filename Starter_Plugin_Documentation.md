@@ -171,7 +171,7 @@ This plugin has two primary parts:
 ### Overview
 This main plugin file, AccessibilityPlusPlugin.php, encodes the two hooks and two filters used by the plugin. This is important for installing and uninstalling the plugin, navigating on the admin sidebar, and replacing the alt-text for images.
 
-The plugin class is declared as below:
+The plugin class is constructed as below:
 
 ```PHP
 class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
