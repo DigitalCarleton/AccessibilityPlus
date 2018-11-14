@@ -9,7 +9,8 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
         $db = get_db();
         $valueOptions = array();
         $table = $db->getTable('Element');
-        $elements = $table->fetchObjects('SELECT * FROM omeka_elements WHERE element_set_id = 1');
+        $tableName = $db->getTableName('Element');
+        $elements = $table->fetchObjects("SELECT * FROM {$tableName} WHERE element_set_id = 1");        
         foreach ($elements as $element){
           $element_title = $element->getProperty('name');
           $valueOptions["$element_title"] = "$element_title";
