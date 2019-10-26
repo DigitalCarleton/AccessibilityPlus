@@ -61,6 +61,8 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       echo "NEWALT: ";
       var_dump($newAlt);
 
+      $attrs['alt'] = $newAlt;
+
       return $attrs;
 
     }
