@@ -8,7 +8,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     );
 
     protected $_filters = array(
-        'file_markup',
+        'image_tag_attributes',
         'admin_navigation_main'
     );
 
@@ -34,8 +34,41 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
         return $navArray;
     }
 
+
+    //hooks into the Image Tag Attributes filter
+    public function filterImageTagAttributes($attrs, $args)
+    {
+      $file = $args['file'];
+
+      echo "HELLOOOOOO ";
+      var_dump($attrs);
+
+      //checks if the option has been set in the options table or not
+      if ($selected_option){
+          $newAlt = metadata($file, array('Dublin Core', $selected_option));
+      }
+      //if no option set or if the requested metadata is missing, use the image title instead
+      if (!$newAlt){
+          //gets the item image and gets the requested metadata from it
+          $item = $file->getItem();
+          $newAlt = metadata($item, array('Dublin Core', 'Title'));
+          //if the image is untitled, set the alt-text as "Untitled Image"
+          if ("$newAlt" == '[Untitled]'){
+              $newAlt = "Untitled Image";
+          }
+      }
+
+      echo "NEWALT: ";
+      var_dump($newAlt);
+
+      return $attrs;
+
+    }
+
+
+    "
     //hooks into the File Markup filter
-    public function filterFileMarkup($html, $args)
+    public function filterImageTagAttributes($html, $args)
     {
       //Checks if the file has a thumbnail or fullsize image
       $file = $args['file'];
@@ -66,4 +99,6 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       }
       return $html;
     }
+    "
+
 }
