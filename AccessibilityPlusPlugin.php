@@ -40,7 +40,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     {
       $file = $args['file'];
 
-      echo "HELLOOOOOO ";
+      echo "<h1>HELLOOOOOOooooooo</h1>";
       var_dump($attrs);
 
       //checks if the option has been set in the options table or not
