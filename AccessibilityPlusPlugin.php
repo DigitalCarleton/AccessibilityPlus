@@ -68,7 +68,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
 
-
+    /*
     //hooks into the File Markup filter
     public function oldFilterFunction($html, $args)
     {
@@ -101,6 +101,6 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       }
       return $html;
     }
-
+    */
 
 }
