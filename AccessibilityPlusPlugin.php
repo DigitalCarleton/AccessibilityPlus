@@ -66,9 +66,9 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
 
-    "
+
     //hooks into the File Markup filter
-    public function filterImageTagAttributes($html, $args)
+    public function oldFilterFunction($html, $args)
     {
       //Checks if the file has a thumbnail or fullsize image
       $file = $args['file'];
@@ -99,6 +99,6 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       }
       return $html;
     }
-    "
+
 
 }
