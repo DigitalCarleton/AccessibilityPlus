@@ -42,7 +42,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 
       echo "<h1>HELLOOOOOOooooooo</h1>";
       var_dump($attrs);
-      /*
+
       //checks if the option has been set in the options table or not
       if ($selected_option){
           $newAlt = metadata($file, array('Dublin Core', $selected_option));
@@ -57,11 +57,11 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
               $newAlt = "Untitled Image";
           }
       }
-      */
+      
       echo "NEWALT: ";
       var_dump($newAlt);
 
-      $attrs = "AAAAAAAAAAAAAAAAAAAAAA";
+      $attrs['alt'] = $newAlt;
 
       return $attrs;
 
