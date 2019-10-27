@@ -44,6 +44,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       var_dump($attrs);
 
       //checks if the option has been set in the options table or not
+      $selected_option = get_option('alt_text_data');
       if ($selected_option){
           $newAlt = metadata($file, array('Dublin Core', $selected_option));
       }
@@ -57,7 +58,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
               $newAlt = "Untitled Image";
           }
       }
-      
+
       echo "NEWALT: ";
       var_dump($newAlt);
 
