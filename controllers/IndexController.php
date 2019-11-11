@@ -11,8 +11,9 @@ class AccessibilityPlus_IndexController extends Omeka_Controller_AbstractActionC
       if ($request->isPost()) {
           if ($form->isValid($request->getPost())) {
               $options = $form->getValues();
-              foreach ($options as $value) {
-                  set_option('alt_text_data', $value);
+              var_dump($options);
+              foreach ($options as $key => $value) {
+                  set_option($key, $value);
               }
           }
       }
