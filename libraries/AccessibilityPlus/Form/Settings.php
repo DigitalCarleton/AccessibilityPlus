@@ -17,7 +17,7 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
         }
 
         //puts the currently chosen element in the first slot of the dropdownmenu
-        $front = get_option('dublin-core-type');
+        $front = get_option('dublin_core_type');
         if($front){
             $valueOptions = array($front => $valueOptions[$front]) + $valueOptions;
         }
@@ -25,7 +25,7 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
         //builds the dropdownmenu
         $this->addElement(
             'select',
-            'dublin-core-type',
+            'dublin_core_type',
             array(
                 'label' => 'Dublin Core Metadata Types',
                 'multiOptions' => $valueOptions,
@@ -34,23 +34,24 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
 
 
         //builds keyboard focus outline checkbox
-        $checked = get_option('keyboard-focus-outline');
+        $checked = get_option('keyboard_focus_outline');
         $this->addElement(
           'checkbox',
-          'keyboard-focus-outline',
+          'keyboard_focus_outline',
           array(
             'label' => 'Turn on Keyboard Focus Outlines',
             'value' => $checked
           )
         );
 
-        $outlineColor = get_option('outline-color');
+        //builds outline color text field
+        $outlineColor = get_option('outline_color');
         $this->addElement(
           'text',
-          'outline-color',
+          'outline_color',
           array(
             'value' => $outlineColor,
-            'label' => 'Element Outline Color'
+            'label' => 'Element Outline Color (#hexcode or CSS color name)'
           )
         );
 
@@ -65,12 +66,12 @@ class AccessibilityPlus_Form_Settings extends Omeka_Form
 
         //makes display separate groups for visual formatting
         $this->addDisplayGroup(
-            array('dublin-core-type'),
+            array('dublin_core_type'),
             'dropdownmenu-display-group'
         );
 
         $this->addDisplayGroup(
-          array('keyboard-focus-outline', 'outline-color'),
+          array('keyboard_focus_outline', 'outline_color'),
           'keyboard-focus-display-group'
         );
 
