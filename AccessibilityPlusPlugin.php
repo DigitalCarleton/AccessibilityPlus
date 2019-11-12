@@ -42,6 +42,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     //hooks into the Image Tag Attributes filter
     public function filterImageTagAttributes($attrs, $args) {
       $item = $args['file']->getItem();
+      $newAlt = "";
 
       //checks if the option has been set in the options table or not
       $selected_option = get_option('dublin_core_type');
