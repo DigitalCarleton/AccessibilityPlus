@@ -16,7 +16,7 @@ Your admin's navigation bar on the left side of the webpage should now have an "
 
 ### Prerequisites
 
-This plugin was designed for Omeka 2.6. It's behavior on other versions it untested, but there is reason for it to work on Omeka 2.0 and above.
+This plugin was designed for Omeka 2.7. AccessibilityPlus will not work on any version of Omeka older than 2.7 because it relies on a filter that was only introduced in this release.
 
 ## Built With
 
