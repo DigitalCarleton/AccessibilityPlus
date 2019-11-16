@@ -4,8 +4,6 @@
 
 Alternate Text or Alt-Text is the text that serves as an alternative to viewing images on a website, but still understand the content of the image. It is used by screenreaders, slow internet connections, or individuals with cognitive disabilities who need fewer distractions on webpages. ([Read more about alt-text here](https://www.deque.com/blog/great-alt-text-introduction/)). Omeka by default uses the image filename to generate the alt-text, but filenames can frequently be indecipherable (i.e. DSC00891.jpg). To address this issue, this plugin lets you choose a metadata element from the Dublin Core (such as "Title" or "Description") to be used as the alt-text. If the element you choose is missing from an image, then this plugin will use the item title by default. If the title is also missing, the filename is used. So far this only enhances alt-text for full-sized images on Omeka, not thumbnails. The plugin Dublin Core Extended adds the full set of Dublin Core properties, include alternative title for alt-text.
 
-This plugin was also part of a larger project on making design more accessibile.  To view the [White Paper for this project click here](https://docs.google.com/document/d/1Yj1Yny-wyeqnK1hTra6DHpf-Xg77f-5nJ2u1sVgt4vM/edit#heading=h.n0gvv4dtaheb).
-
 ## Getting Started
 
 To use this plugin, go to the folder of your installation of Omeka and place the AccessibilityPlus folder in omeka/plugins.
