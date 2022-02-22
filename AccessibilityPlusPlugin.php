@@ -4,7 +4,8 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_hooks = array(
         'install',
-        'uninstall'
+        'uninstall',
+        'public_head'
     );
 
     protected $_filters = array(
@@ -15,18 +16,21 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
     //sets the default chosen metadata to the alt_text_data as 'title'
     public function hookInstall()
     {
-        set_option('alt_text_data', 'Title');
+        set_option('dublin_core_type', 'Title');
+        set_option('keyboard_focus_outline', '0');
+        set_option('outline_color', 'eb4034');
     }
 
     //removes the 'alt_text_data' option from the database when the plugin is uninstalled
     public function hookUninstall()
     {
-        delete_option('alt_text_data');
+        delete_option('dublin_core_type');
+        delete_option('keyboard_focus_outline');
+        delete_option('outline_color');
     }
 
     //Adds AccessibilityPlus to the admin navigation sidebar menu
-    public function filterAdminNavigationMain($navArray)
-    {
+    public function filterAdminNavigationMain($navArray) {
         $navArray['AccessibilityPlus'] = array(
             'label' => __("AccessibilityPlus"),
             'uri' => url('accessibility-plus')
@@ -41,7 +45,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       $newAlt = "";
 
       //checks if the option has been set in the options table or not
-      $selected_option = get_option('alt_text_data');
+      $selected_option = get_option('dublin_core_type');
       if ($selected_option){
           $newAlt = metadata($item, array('Dublin Core', $selected_option));
       }
@@ -58,6 +62,22 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
 
       return $attrs;
     }
+
+
+
+
+    //Adds content to the Head of all public pages
+    public function hookPublicHead($args) {
+
+      //Adds border to focused elements
+      if (get_option('keyboard_focus_outline') == 1) {
+        $color = get_option('outline_color');
+        queue_css_string("*:focus {border: 5px solid {$color};}");
+      }
+
+    }
+
+
 
 
 }
