@@ -72,7 +72,7 @@ class AccessibilityPlusPlugin extends Omeka_Plugin_AbstractPlugin
       //Adds border to focused elements
       if (get_option('keyboard_focus_outline') == 1) {
         $color = get_option('outline_color');
-        queue_css_string("*:focus {outline: none !important; border: 4px solid "."#"."{$color} !important;}");
+        queue_css_string("*:focus {outline: none !important; border: 4px solid "."#"."{$color} !important; border-radius: 3px;}");
       }
 
     }
