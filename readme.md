@@ -12,17 +12,28 @@ Your admin's navigation bar on the left side of the webpage should now have an "
 
 ### Alt-Text
 
-Alternate Text or Alt-Text is the text that serves as an alternative to viewing images on a website, but still understand the content of the image. It is used by screenreaders, slow internet connections, or individuals with cognitive disabilities who need fewer distractions on webpages. ([Read more about alt-text here](https://www.deque.com/blog/great-alt-text-introduction/)). Omeka by default uses the image filename to generate the alt-text, but filenames can frequently be indecipherable (i.e. DSC00891.jpg). To address this issue, this plugin lets you choose a metadata element from the Dublin Core (such as "Title" or "Description") to be used as the alt-text. If the element you choose is missing from an image, then this plugin will use the item title by default. If the title is also missing, the filename is used. So far this only enhances alt-text for full-sized images on Omeka, not thumbnails. The plugin Dublin Core Extended adds the full set of Dublin Core properties, include alternative title for alt-text.
+Alternate Text or Alt-Text is the text that helps users understand the content of an image without needing to view the image. It is used by screenreader users, users with slow internet connections, and individuals with cognitive disabilities who need fewer distractions on webpages. ([Read more about alt-text here](https://www.deque.com/blog/great-alt-text-introduction/)). 
+
+Generally, web designers should take the time to handwrite alt-text for every image on their site. However, an Omeka developer may decide that a metadata element for an item may be a sufficient description for an image. This plugin allows developers to automate the process.
+
+Omeka by default uses the image filename to generate the alt-text, but filenames can frequently be indecipherable (i.e. DSC00891.jpg). To address this issue, this plugin lets you choose a metadata element from the Dublin Core (such as "Title" or "Description") to be used as the alt-text. If the element you choose is missing from an image, then this plugin will use the item title by default. If the title is also missing, the filename is used. So far this only enhances alt-text for full-sized images on Omeka, not thumbnails. The plugin Dublin Core Extended adds the full set of Dublin Core properties, include alternative title for alt-text.
+
+Before using this feature, developers should ensure that the metadata element provides a sufficient description for the images they display.
 
 ### Keyboard Focus Outlines
 
-ADD STUFF HERE
+Developers now have the option of enhancing the tab-focus outlines of HTML elements by choosing a high-contrast color. Many users with disabilities (motor function, cognitive, visual, etc.) use the tab-focus feature to navigate sites instead of a keyboard and mouse. Choosing a sharper color for the focus outlines can help these users better navigate the website. Developers can input hex code colors or CSS color names to choose the color of the focus outline.
+
+## Long-term Goals
+
+- Skip navigation links (these help screen-reader users skip directly to a site's content)
+- Enforce alt-text when chosen metadata element is empty
+- Enable customizable alt-text to override the chosen metadata element
+- Add admin view which allows admin to view the alt-text of items and gives advice on how to write good alt-text
+- Color contrast tester
 
 
-
-
-
-### Prerequisites
+## Prerequisites
 
 This plugin was designed for Omeka 2.7. AccessibilityPlus will not work on any version of Omeka older than 2.7 because it relies on a filter that was only introduced in this release.
 
